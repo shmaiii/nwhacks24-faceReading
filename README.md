@@ -11,15 +11,13 @@ With our brains!
 JK!
 First we take a passport-style picture of the user and sends it to the server where image processing happens (with the help of Imgur API). We then use MediaPipe, an open-source framework for building pipelines to perform computer vision inference, to detect facial landmarks and coordinates of important facial features. Then we use mathematics to logic out the important traits and characteristics associated with them. These traits will be fed into a function that maps to certain characteristics and renders out a prophecy! The app runs on a Javascript React front-end along with a Python Flask backend. 
 
-## Challenges we ran into
-Working with new stuffs! A lot lot of new technologies to deal with!!
+## How to run it
+1. To run the front end
+   `cd frontend-app`.
+   Then run `npm install`.
+   Then run `npm start`
 
-## Accomplishments that we're proud of
-All of it!! Most proud of our team-work!
-
-## What we learned
-ALOT! (basically most if not all of the technicals mentioned above)
-
-## What's next for Prof-Fa-Cee
-Model training for more accurate feature extractions!
-More depth into physiognomy (even though we know its not heavy scientific based)
+3. To run the backend (in a separate terminal):
+  Run `cd python-backend`
+    Then run`pip install -r requirements.txt`
+   Then run `flask run`
