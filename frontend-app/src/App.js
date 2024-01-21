@@ -12,7 +12,10 @@ import splash from './splash.gif';
 import loadingGif from './loading.gif';
 import './App.css';
 
-let placeholderResp;
+let placeholderResp = {
+  "url": "",
+  "description": ""
+};
 
 function SplashScreen() {
   return (
@@ -27,7 +30,7 @@ function NavbarComponent() {
     <Navbar className='custom-navbar' fixed='top'>
       <Container>
         <Navbar.Brand as={Link} to="/">
-          FaceFuture
+          Proffasee
         </Navbar.Brand>
         <Nav className="me-auto">
           <Nav.Link as={Link} to="/">
@@ -48,13 +51,13 @@ function LandingPage({ onStart }) {
       <NavbarComponent />
 
       <div className="mt-3 text-center d-flex flex-column align-items-center justify-content-center vh-100">
-        <h2>Welcome to FaceFuture!</h2>
+        <h2>Welcome to Proffasee!</h2>
         <p>
           Are you ready to explore the fascinating world where cutting-edge facial analysis meets
           ancient divination? 
         </p>
         <p>
-          Let your face be the guide to unlocking the mysteries that lie ahead.
+          With just an image of your face, we can unlock various mysteries that lie ahead.
         </p>
         <p>
           Let the adventure begin, and let your face tell the tale!
@@ -72,44 +75,52 @@ function CapturePage({ onCapture }) {
   const webcamRef = useRef(null);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const videoContraints = {
+  const [webcamInitialized, setWebcamInitialized] = useState(false);
+  const videoConstraints = {
     width: 300,
-    height: 400.
-  }
+    height: 400,
+  };
 
   const captureHandler = async () => {
-    const imageSrc = webcamRef.current.getScreenshot();
+    setLoading(true);
   
-    try {
-      const response = await fetch('http://127.0.0.1:5000/api/convertIMG', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ imageSrc }),
-      });
-      setLoading(true);
-      if (response.ok) {
-        console.log('Image successfully processed on the backend');
+    if (webcamRef.current) {
+      const imageSrc = webcamRef.current.getScreenshot();
+  
+      try {
+        const response = await fetch('http://127.0.0.1:5000/api/convertIMG', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ imageSrc }),
+        });
+  
+        if (response.ok) {
+          console.log('Image successfully processed on the backend');
 
-        placeholderResp = await response.json();
-        if (onCapture) {
-          onCapture(imageSrc);
-
-          setTimeout(() => {
-            setLoading(false);
+          const resppp = await response.json()
+          console.log(resppp)
+          placeholderResp = resppp;
+          if (onCapture) {
+            onCapture(imageSrc);
+  
             navigate('/result');
-          }, 1000);
+          }
+        } else {
+          console.error('Failed to process the image on the backend');
         }
-      } else {
-        console.error('Failed to process the image on the backend');
+      } catch (error) {
+        console.error('Error while communicating with the backend', error);
+      } finally {
         setLoading(false);
       }
-    } catch (error) {
-      console.error('Error while communicating with the backend', error);
-      setLoading(false);
     }
-  };  
+  };
+
+  const handleWebcamUserMedia = () => {
+    setWebcamInitialized(true);
+  };
 
   return (
     <Container>
@@ -117,15 +128,21 @@ function CapturePage({ onCapture }) {
 
       <Form className="mt-3 text-center d-flex flex-column align-items-center justify-content-center vh-100">
         <Form.Group className="mb-3 text-center">
-          <Webcam ref={webcamRef} videoConstraints={videoContraints}/>
+          {loading ? (
+            <img src={loadingGif} alt="Loading" style={{ width: '20px', height: '20px' }} />
+          ) : (
+            <Webcam
+              ref={(webcam) => {
+                webcamRef.current = webcam;
+              }}
+              videoConstraints={videoConstraints}
+              onUserMedia={handleWebcamUserMedia}
+            />
+          )}
         </Form.Group>
         <Form.Group className="mb-3 text-center">
           <Button variant="dark" onClick={captureHandler} className="mb-3">
-            {loading ? (
-              <img src={loadingGif} alt="Loading" style={{ width: '20px', height: '20px' }} />
-            ) : (
-              'Capture'
-            )}
+            {loading ? 'Capturing...' : 'Capture'}
           </Button>
         </Form.Group>
       </Form>
@@ -134,35 +151,37 @@ function CapturePage({ onCapture }) {
 }
 
 function ResultPage() {
-  const [resultData, setResultData] = useState({});
-
-  const showResultHandler = async () => {
-    // try {
-    //   //const response = await fetch('http://127.0.0.1:5000/api/get_prophecy');
+  // const [resultData, setResultData] = useState({});
+  
+  // const showResultHandler = async () => {
+  //   // try {
+  //   //   //const response = await fetch('http://127.0.0.1:5000/api/get_prophecy');
       
-    //   if (response.ok) {
-    //     const result = await response.json();
-    //     setResultData(result);
-    //   } else {
-    //     console.error('Failed to fetch result from the backend');
-    //   }
-    // } catch (error) {
-    //   console.error('Error while communicating with the backend', error);
-    // }
-    setResultData(placeholderResp)
-  };
+  //   //   if (response.ok) {
+  //   //     const result = await response.json();
+  //   //     setResultData(result);
+  //   //   } else {
+  //   //     console.error('Failed to fetch result from the backend');
+  //   //   }
+  //   // } catch (error) {
+  //   //   console.error('Error while communicating with the backend', error);
+  //   // }
+  //   setResultData(placeholderResp)
+  // };
 
   return (
     <Container>
       <NavbarComponent />
 
-      <div className="mt-3 text-center">
-        <h2>Result</h2>
-        {resultData.url && <img src={resultData.url} alt="Result" className="mb-3" />}
-        <p>{resultData.description}</p>
-        <Button variant="dark" onClick={showResultHandler}>
-          Show Result
-        </Button>
+      <div className="mt-3 text-center d-flex justify-content-around align-items-center">
+        <div className="result-image">
+          <h2>Result</h2>
+          {placeholderResp.url && <img src={placeholderResp.url} alt="Result" className="mb-3" />}
+        </div>
+
+        <div className="result-description">
+          <p>{placeholderResp.description}</p>
+        </div>
       </div>
     </Container>
   );
