@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import requests
 from face_mesh.face_mesh_main import landmarks_detect
 from face_mesh.classify_features import get_facial_features
@@ -6,6 +6,7 @@ from flask_cors import CORS
 from generate_prophecy import generate_prophecy
 import base64
 from PIL import Image
+from imgur import upload_imgur
 
 app = Flask(__name__)
 CORS(app)
@@ -30,15 +31,23 @@ def convert_img():
         im = Image.open(webp_filename).convert("RGB")
         im.save(jpg_filename, "jpeg")
 
-        return {'message': 'Image successfully saved as WebP and converted to JPEG'}, 200
+        final_prophecy = get_prophecy()
+        new_image_link = upload_imgur()
+
+        return jsonify({
+            'description': final_prophecy,
+            'url': new_image_link
+        })
+
+        #return {'message': 'Image successfully saved as WebP and converted to JPEG'}, 200
 
     except Exception as e:
         print(f'Error: {str(e)}')
-        return {'error': 'Failed to process the image'}, 500
+        return {'error': 'Failed to process the image or process the image'}, 500
 
 
-@app.route("/api/get_prophecy")
-def get_coordinates():
+#@app.route("/api/get_prophecy")
+def get_prophecy():
 
     #transform the img url into jpg file
     #img_url = request.args.get('img_url')
@@ -54,9 +63,7 @@ def get_coordinates():
     final_prophecy = generate_prophecy(facial_features)
     print(final_prophecy)
 
-    #return the image and final prophecy in a json object to send to the front-end
-
-    return "<p>WTF</p>"
+    return final_prophecy
 
 # def download_image(url, destination):
 #     try:
