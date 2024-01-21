@@ -58,14 +58,14 @@ def get_coordinates():
 
     return "<p>WTF</p>"
 
-def download_image(url, destination):
-    try:
-        response = requests.get(url)
-        response.raise_for_status() # check errors
+# def download_image(url, destination):
+#     try:
+#         response = requests.get(url)
+#         response.raise_for_status() # check errors
 
-        with open(destination, 'wb') as file:
-            file.write(response.content)
+#         with open(destination, 'wb') as file:
+#             file.write(response.content)
         
-        print(f"Image downloaded successfully to {destination}")
-    except requests.exceptions.RequestException as e:
-        print(f"Error downloading image: {e}")
+#         print(f"Image downloaded successfully to {destination}")
+#     except requests.exceptions.RequestException as e:
+#         print(f"Error downloading image: {e}")

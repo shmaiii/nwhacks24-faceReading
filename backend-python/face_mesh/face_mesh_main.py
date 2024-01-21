@@ -72,8 +72,8 @@ def landmarks_detect():
       res = detection_result.face_landmarks
       print(res[0][1].x)
 
-      #annotated_image = draw_landmarks_on_image(mp_image.numpy_view(), detection_result)
-      #cv2.imwrite(os.path.join(os.path.dirname(__file__), 'annotated_image.jpg'), cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
+      annotated_image = draw_landmarks_on_image(mp_image.numpy_view(), detection_result)
+      cv2.imwrite(os.path.join(os.path.dirname(__file__), 'annotated_image.jpg'), cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
 
   return res[0]
 
