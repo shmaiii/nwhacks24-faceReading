@@ -45,8 +45,6 @@ def convert_img():
         print(f'Error: {str(e)}')
         return {'error': 'Failed to process the image or process the image'}, 500
 
-
-#@app.route("/api/get_prophecy")
 def get_prophecy():
 
     #transform the img url into jpg file

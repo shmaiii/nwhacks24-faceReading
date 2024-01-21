@@ -12,6 +12,8 @@ import splash from './splash.gif';
 import loadingGif from './loading.gif';
 import './App.css';
 
+let placeholderResp;
+
 function SplashScreen() {
   return (
     <div className="splash-screen">
@@ -86,6 +88,7 @@ function CapturePage({ onCapture }) {
       if (response.ok) {
         console.log('Image successfully processed on the backend');
 
+        placeholderResp = await response.json();
         if (onCapture) {
           onCapture(imageSrc);
 
@@ -130,18 +133,19 @@ function ResultPage() {
   const [resultData, setResultData] = useState({});
 
   const showResultHandler = async () => {
-    try {
-      const response = await fetch('http://127.0.0.1:5000/api/get_prophecy');
+    // try {
+    //   //const response = await fetch('http://127.0.0.1:5000/api/get_prophecy');
       
-      if (response.ok) {
-        const result = await response.json();
-        setResultData(result);
-      } else {
-        console.error('Failed to fetch result from the backend');
-      }
-    } catch (error) {
-      console.error('Error while communicating with the backend', error);
-    }
+    //   if (response.ok) {
+    //     const result = await response.json();
+    //     setResultData(result);
+    //   } else {
+    //     console.error('Failed to fetch result from the backend');
+    //   }
+    // } catch (error) {
+    //   console.error('Error while communicating with the backend', error);
+    // }
+    setResultData(placeholderResp)
   };
 
   return (
