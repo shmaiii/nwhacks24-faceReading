@@ -10,7 +10,7 @@ from mediapipe import solutions
 import cv2
 import os
 
-path = os.path.join(os.path.dirname(__file__), 'mai.jpg')
+path = os.path.join(os.path.dirname(__file__), 'image.jpg')
 
 model_path = os.path.join(os.path.dirname(__file__), 'face_landmarker.task')
 #path = "./mai.jpg"
@@ -77,6 +77,6 @@ def landmarks_detect():
 
   return res[0]
 
-# if __name__ == "__main__":
-#     landmarks_detect()
+if __name__ == "__main__":
+    landmarks_detect()
 

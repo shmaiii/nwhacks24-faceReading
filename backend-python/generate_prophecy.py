@@ -1,9 +1,4 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
 import json
-
-app = Flask(__name__)
-CORS(app)
 
 with open("db.json", "r") as file:
     db = json.load(file)
@@ -18,7 +13,7 @@ def generate_prophecy(input):
 
     descriptions = []
 
-    for attribute in attributes:
+    for attribute in input.keys():
         value = input[attribute]
         attribute_descriptions = find_attribute_description(attribute, value, descriptions)
 
