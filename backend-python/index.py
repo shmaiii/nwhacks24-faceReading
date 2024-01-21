@@ -1,24 +1,25 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import json
 
 app = Flask(__name__)
+CORS(app)
 
 with open("db.json", "r") as file:
     db = json.load(file)
 
-@app.route("/app/get_prophecy", methods=["GET"])
-def get_prophecy():
-    # if not request.is_json:
-    #     return jsonify({"error": "Invalid request. Please provide a JSON request."}), 400
-    
-    req = request.get_json()
+# @app.route("/app/get_prophecy", methods=["GET"])
+# def get_prophecy():
+#     return
 
-    attributes = list(req.keys())
+def generate_prophecy(input):
+    print(input)
+    attributes = list(input.keys())
 
     descriptions = []
 
     for attribute in attributes:
-        value = req[attribute]
+        value = input[attribute]
         attribute_descriptions = find_attribute_description(attribute, value, descriptions)
 
     concatenated_string = " ".join(descriptions)
