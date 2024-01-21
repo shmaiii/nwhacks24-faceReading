@@ -9,6 +9,7 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import splash from './splash.gif';
+import loadingGif from './loading.gif';
 import './App.css';
 
 function SplashScreen() {
@@ -67,6 +68,8 @@ function LandingPage({ onStart }) {
 
 function CapturePage({ onCapture }) {
   const webcamRef = useRef(null);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const captureHandler = async () => {
     const imageSrc = webcamRef.current.getScreenshot();
@@ -79,18 +82,25 @@ function CapturePage({ onCapture }) {
         },
         body: JSON.stringify({ imageSrc }),
       });
-
+      setLoading(true);
       if (response.ok) {
         console.log('Image successfully processed on the backend');
 
         if (onCapture) {
           onCapture(imageSrc);
+
+          setTimeout(() => {
+            setLoading(false);
+            navigate('/result');
+          }, 1000);
         }
       } else {
         console.error('Failed to process the image on the backend');
+        setLoading(false);
       }
     } catch (error) {
       console.error('Error while communicating with the backend', error);
+      setLoading(false);
     }
   };  
 
@@ -104,7 +114,11 @@ function CapturePage({ onCapture }) {
         </Form.Group>
         <Form.Group className="mb-3 text-center">
           <Button variant="dark" onClick={captureHandler} className="mb-3">
-            Capture
+            {loading ? (
+              <img src={loadingGif} alt="Loading" style={{ width: '20px', height: '20px' }} />
+            ) : (
+              'Capture'
+            )}
           </Button>
         </Form.Group>
       </Form>
@@ -112,15 +126,35 @@ function CapturePage({ onCapture }) {
   );
 }
 
-function ResultPage({ resultData }) {
+function ResultPage() {
+  const [resultData, setResultData] = useState({});
+
+  const showResultHandler = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/api/get_prophecy');
+      
+      if (response.ok) {
+        const result = await response.json();
+        setResultData(result);
+      } else {
+        console.error('Failed to fetch result from the backend');
+      }
+    } catch (error) {
+      console.error('Error while communicating with the backend', error);
+    }
+  };
+
   return (
     <Container>
       <NavbarComponent />
 
       <div className="mt-3 text-center">
         <h2>Result</h2>
-        {resultData.image && <img src={resultData.image} alt="Result" className="mb-3" />}
+        {resultData.url && <img src={resultData.url} alt="Result" className="mb-3" />}
         <p>{resultData.description}</p>
+        <Button variant="dark" onClick={showResultHandler}>
+          Show Result
+        </Button>
       </div>
     </Container>
   );
@@ -134,7 +168,7 @@ function App() {
   useEffect(() => {
     const splashTimeout = setTimeout(() => {
       setShowSplash(false);
-    }, 3000);
+    }, 2000);
 
     return () => clearTimeout(splashTimeout);
   }, []);
