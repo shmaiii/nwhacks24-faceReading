@@ -1,5 +1,6 @@
 # from calculate_measurements import create_measurements_dict
 import math
+import random
 
 face_top_index = 10
 face_bottom_index = 152
@@ -146,7 +147,7 @@ def classify_forehead_shape(forehead_w, face_w, forehead_l, face_l):
 
 
 # TODO1
-def classify_eyebrows(forehead_to_eyebrows_ratio, eyes_to_eyebrows_ratio):
+def classify_eyebrows(forehead_to_eyebrows_ratio, eyes_to_eyebrows_ratio, points):
     """
     Classify eyebrows based on facial ratios.
 
@@ -157,31 +158,37 @@ def classify_eyebrows(forehead_to_eyebrows_ratio, eyes_to_eyebrows_ratio):
     Returns:
     - A string representing the classified eyebrow type.
     """
-    straight_threshold = 0.2  # Adjust based on your observations
-    arched_threshold = 0.4    # Adjust based on your observations
-    high_threshold = 0.5      # Adjust based on your observations
-    low_threshold = 0.3       # Adjust based on your observations
-    bushy_threshold = 0.4     # Adjust based on your observations
-    thin_threshold = 0.2      # Adjust based on your observations
 
-    if forehead_to_eyebrows_ratio >= high_threshold and eyes_to_eyebrows_ratio >= high_threshold:
-        return "High and Arched Eyebrows"
-    elif forehead_to_eyebrows_ratio >= high_threshold:
-        return "High Eyebrows"
-    elif eyes_to_eyebrows_ratio >= high_threshold:
-        return "Arched Eyebrows"
-    elif forehead_to_eyebrows_ratio <= low_threshold and eyes_to_eyebrows_ratio <= low_threshold:
-        return "Low and Straight Eyebrows"
-    elif forehead_to_eyebrows_ratio <= low_threshold:
-        return "Low Eyebrows"
-    elif eyes_to_eyebrows_ratio <= low_threshold:
-        return "Straight Eyebrows"
-    elif forehead_to_eyebrows_ratio >= bushy_threshold or eyes_to_eyebrows_ratio >= bushy_threshold:
+    res = ["High and Arched Eyebrows", "High Eyebrows", "Arched Eyebrows", "Low and Straight Eyebrows", "Low Eyebrows", "Straight Eyebrows", "Bushy Eyebrows", "Thin Eyebrows"]
+    eyes_height = calculate_distance(points, 159, 145)
+    #eyebrwo_height means height to eyebrow starting from eyes
+    eyebrow_height = calculate_distance(points, 52, 27)
+    eyes_to_eyebrows_ratio =  eyebrow_height / eyes_height
+    eyebrows_slope = (points[105].y - points[70].y) / (points[105].x - points[70].y)
+    eyebrows_height_height = calculate_distance(points, 105, 52)
+    eye_brow_part_height = calculate_distance(points, 105, 27)
+
+    if eyebrows_height_height / eye_brow_part_height >= 0.46:
         return "Bushy Eyebrows"
-    elif forehead_to_eyebrows_ratio <= thin_threshold or eyes_to_eyebrows_ratio <= thin_threshold:
+    if eyebrows_height_height / eye_brow_part_height <= 0.33:
         return "Thin Eyebrows"
+    
+    if eyebrows_slope >= 0.35 :
+        if eyes_to_eyebrows_ratio > 1.2 or calculate_distance(points, 65, 45) / (eyebrow_height + eyes_height) > 1.5:
+            return "Hight and Arched Eyebrows"
+        return "Arched Eyebrows"
+    if eyebrows_slope <= 0.15:
+        if eyes_to_eyebrows_ratio < 0.8 or calculate_distance(points, 65, 45) / (eyebrow_height + eyes_height) < 0.5 :
+            return "Low and Straight Eyebrows"
+        return "Straight Eyebrows"
+    
+    if eyes_to_eyebrows_ratio > 1.2 or calculate_distance(points, 65, 45) / (eyebrow_height + eyes_height) > 1.5:
+        return "High Eyebrows"
+    if eyes_to_eyebrows_ratio < 0.8 or calculate_distance(points, 65, 45) / (eyebrow_height + eyes_height) < 0.5 :
+        return "Low Eyebrows"
     else:
-        return None
+        random_num = random.randint(0, len(res) - 1)
+        return res[random_num]
 
 
 def classify_eye_set(eye_distance, face_w, forehead_w):
