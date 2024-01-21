@@ -2,8 +2,11 @@ from flask import Flask, request
 import requests
 from face_mesh.face_mesh_main import landmarks_detect
 from face_mesh.classify_features import get_facial_features
+from flask_cors import CORS
+from generate_prophecy import generate_prophecy
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/")
 def hello_world():
@@ -23,9 +26,8 @@ def get_coordinates():
     facial_features = get_facial_features(coordinates)
     print(facial_features)
     #get the prophecy texts
-    final_prophecy = ''
-
-    #get the new image
+    final_prophecy = generate_prophecy(facial_features)
+    print(final_prophecy)
 
     #return the image and final prophecy in a json object to send to the front-end
 
