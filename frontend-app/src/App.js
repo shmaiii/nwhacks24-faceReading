@@ -100,7 +100,6 @@ function CapturePage({ onCapture }) {
           console.log('Image successfully processed on the backend');
 
           const resppp = await response.json()
-          console.log(resppp)
           placeholderResp = resppp;
           if (onCapture) {
             onCapture(imageSrc);
@@ -169,6 +168,13 @@ function ResultPage() {
   //   setResultData(placeholderResp)
   // };
 
+  const formattedDescription = placeholderResp.description.split('\n').map((line, index) => (
+    <React.Fragment key={index}>
+      {line}
+      {index < placeholderResp.description.length - 1 && <br />} {/* Add <br> except after the last line */}
+    </React.Fragment>
+  ));
+
   return (
     <Container>
       <NavbarComponent />
@@ -176,7 +182,7 @@ function ResultPage() {
       <div className="mt-3 text-center">
         <h2>Result</h2>
           {placeholderResp.url && <img src={placeholderResp.url} alt="Result" className="mb-3" />}
-          <p className='custom-p'>{placeholderResp.description}</p>
+          <p className='custom-p'>{formattedDescription}</p>
       </div>
     </Container>
   );
