@@ -56,8 +56,13 @@ body {
 }
 
 .custom-p {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
   background-color: rgba(0, 0, 0, 0.5);
   padding: 10px;
   border-radius: 25px;
   text-align: left;
+  max-width: 85%;
+  align-self: center;
 }
