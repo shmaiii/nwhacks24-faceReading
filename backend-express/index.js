@@ -27,14 +27,14 @@ app.get("/app/get_prophecy", (req, res) => {
 
     for (const attribute of attributes) {
         const value = req[attribute];
-        const attributeObject = findAttributeDescription(attribute, value);
-        descriptions.push({ [attribute]: attributeObject });
+        const attributeObject = findAttributeDescription(attribute, value, descriptions);
     }
 
-    res.send({ descriptions });
+    const concatenatedString = descriptions.join(" ");
+    res.send(concatenatedString);
 });
 
-function findAttributeDescription(attribute, value) {
+function findAttributeDescription(attribute, value, descriptions) {
     if (db[attribute]) {
         const attributeArray = db[attribute];
 
@@ -43,12 +43,14 @@ function findAttributeDescription(attribute, value) {
             for (const item of value) {
                 const itemDescription = attributeArray.find(obj => obj[item]);
                 const description = itemDescription[item];
-                descriptions.push({ [item]: description });
+                descriptions.push(description);
             }
             return descriptions;
         } else {
             // Handle attributes that take in a single key (eg. face_shape)
-            return attributeArray.find(obj => obj[value]);
+            const itemDescription = attributeArray.find(obj => obj[value]);
+            const description = itemDescription[value];
+            return descriptions.push(description);
         }
     }
 
