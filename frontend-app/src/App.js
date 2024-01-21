@@ -72,6 +72,10 @@ function CapturePage({ onCapture }) {
   const webcamRef = useRef(null);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const videoContraints = {
+    width: 300,
+    height: 400.
+  }
 
   const captureHandler = async () => {
     const imageSrc = webcamRef.current.getScreenshot();
@@ -113,7 +117,7 @@ function CapturePage({ onCapture }) {
 
       <Form className="mt-3 text-center d-flex flex-column align-items-center justify-content-center vh-100">
         <Form.Group className="mb-3 text-center">
-          <Webcam ref={webcamRef} />
+          <Webcam ref={webcamRef} videoConstraints={videoContraints}/>
         </Form.Group>
         <Form.Group className="mb-3 text-center">
           <Button variant="dark" onClick={captureHandler} className="mb-3">
