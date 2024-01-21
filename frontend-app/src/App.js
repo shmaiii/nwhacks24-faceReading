@@ -173,10 +173,10 @@ function ResultPage() {
     <Container>
       <NavbarComponent />
 
-      <div className="mt-3 text-center d-flex justify-content-around align-items-center">
+      <div className="mt-3 text-center">
         <h2>Result</h2>
           {placeholderResp.url && <img src={placeholderResp.url} alt="Result" className="mb-3" />}
-          <p>{placeholderResp.description}</p>
+          <p className='custom-p'>{placeholderResp.description}</p>
       </div>
     </Container>
   );
