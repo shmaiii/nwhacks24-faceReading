@@ -9,7 +9,7 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import splash from './splash.gif';
-// import loadingGif from './loading.gif';
+import loadingGif from './loading.gif';
 import './App.css';
 
 let placeholderResp = {
@@ -30,7 +30,7 @@ function NavbarComponent() {
     <Navbar className='custom-navbar' fixed='top'>
       <Container>
         <Navbar.Brand as={Link} to="/">
-          Proffacee
+          Proffasee
         </Navbar.Brand>
         <Nav className="me-auto">
           <Nav.Link as={Link} to="/">
@@ -51,7 +51,7 @@ function LandingPage({ onStart }) {
       <NavbarComponent />
 
       <div className="mt-3 text-center d-flex flex-column align-items-center justify-content-center vh-100">
-        <h2>Welcome to Proffacee!</h2>
+        <h2>Welcome to Proffasee!</h2>
         <p>
           Are you ready to explore the fascinating world where cutting-edge facial analysis meets
           ancient divination? 
@@ -74,39 +74,51 @@ function LandingPage({ onStart }) {
 function CapturePage({ onCapture }) {
   const webcamRef = useRef(null);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [webcamInitialized, setWebcamInitialized] = useState(false);
   const videoConstraints = {
     width: 300,
-    height: 400.
-  }
+    height: 400,
+  };
 
   const captureHandler = async () => {
-    const imageSrc = webcamRef.current.getScreenshot();
+    setLoading(true);
   
-    try {
-      const response = await fetch('http://127.0.0.1:5000/api/convertIMG', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ imageSrc }),
-      });
-      
-      if (response.ok) {
-        console.log('Image successfully processed on the backend');
-
-        placeholderResp = response;
-        if (onCapture) {
-          onCapture(imageSrc);
-
-          navigate('/result');
+    if (webcamRef.current) {
+      const imageSrc = webcamRef.current.getScreenshot();
+  
+      try {
+        const response = await fetch('http://127.0.0.1:5000/api/convertIMG', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ imageSrc }),
+        });
+  
+        if (response.ok) {
+          console.log('Image successfully processed on the backend');
+  
+          placeholderResp = response;
+          if (onCapture) {
+            onCapture(imageSrc);
+  
+            navigate('/result');
+          }
+        } else {
+          console.error('Failed to process the image on the backend');
         }
-      } else {
-        console.error('Failed to process the image on the backend');
+      } catch (error) {
+        console.error('Error while communicating with the backend', error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Error while communicating with the backend', error);
     }
-  };  
+  };
+
+  const handleWebcamUserMedia = () => {
+    setWebcamInitialized(true);
+  };
 
   return (
     <Container>
@@ -114,16 +126,21 @@ function CapturePage({ onCapture }) {
 
       <Form className="mt-3 text-center d-flex flex-column align-items-center justify-content-center vh-100">
         <Form.Group className="mb-3 text-center">
-          <Webcam ref={webcamRef} videoConstraints={videoConstraints}/>
+          {loading ? (
+            <img src={loadingGif} alt="Loading" style={{ width: '20px', height: '20px' }} />
+          ) : (
+            <Webcam
+              ref={(webcam) => {
+                webcamRef.current = webcam;
+              }}
+              videoConstraints={videoConstraints}
+              onUserMedia={handleWebcamUserMedia}
+            />
+          )}
         </Form.Group>
         <Form.Group className="mb-3 text-center">
           <Button variant="dark" onClick={captureHandler} className="mb-3">
-            {/* {loading ? (
-              <img src={loadingGif} alt="Loading" style={{ width: '20px', height: '20px' }} />
-            ) : (
-              'Capture'
-            )} */}
-            Capture
+            {loading ? 'Capturing...' : 'Capture'}
           </Button>
         </Form.Group>
       </Form>
