@@ -52,10 +52,10 @@ def get_facial_features(points):
     # Classify
     features['face_shape'] = classify_face_shape(face_w, face_l, forehead_w, jaw_w)
     features['forehead'] = classify_forehead_shape(forehead_w, face_w, forehead_l, face_l)
-    features['eyebrows'] = 'straight' # hard-coded
+    features['eyebrows'] = classify_eyebrows(points)
     features['eyes'] = classify_eye_set(eye_distance, eyeball_w)
     features['cheeks'] = classify_cheeks(cheekbone_l, face_l)
-    features['lips'] = classify_lips(upper_lip_h, lower_lip_h)
+    features['lips'] = classify_lips(upper_lip_h, lower_lip_h, mouth_w)
 
     return features
 
@@ -87,11 +87,12 @@ def calculate_distance(points, first, second):
     pointB = points[second]
     return math.sqrt((pointA.x - pointB.x)**2 + (pointA.y - pointB.y)**2)
 
-def classify_lips(upper_lip_h, lower_lip_h):
+def classify_lips(upper_lip_h, lower_lip_h, mouth_w):
     # Calculate ratios
     upper_lip_to_lower_lip_ratio = upper_lip_h / lower_lip_h
+    lip_to_mouth_ratio = (upper_lip_h + lower_lip_h) / mouth_w
 
-    if upper_lip_to_lower_lip_ratio >= 0.55:
+    if upper_lip_to_lower_lip_ratio >= 0.55 and lip_to_mouth_ratio >= 0.31:
         return "thick"
     else: 
         return "thin"
@@ -111,7 +112,7 @@ def classify_eye_set(eye_distance, eyeball_w):
     else:
         return "close_set"
 
-def classify_eyebrows(forehead_to_eyebrows_ratio, eyes_to_eyebrows_ratio, points):
+def classify_eyebrows(points):
     res = ["High and Arched Eyebrows", "High Eyebrows", "Arched Eyebrows", "Low and Straight Eyebrows", "Low Eyebrows", "Straight Eyebrows", "Bushy Eyebrows", "Thin Eyebrows"]
     eyes_height = calculate_distance(points, 159, 145)
     #eyebrwo_height means height to eyebrow starting from eyes
