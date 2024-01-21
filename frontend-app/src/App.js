@@ -30,7 +30,7 @@ function NavbarComponent() {
     <Navbar className='custom-navbar' fixed='top'>
       <Container>
         <Navbar.Brand as={Link} to="/">
-          Proffasee
+          Prof-Fa-Cee
         </Navbar.Brand>
         <Nav className="me-auto">
           <Nav.Link as={Link} to="/">
@@ -51,7 +51,7 @@ function LandingPage({ onStart }) {
       <NavbarComponent />
 
       <div className="mt-3 text-center d-flex flex-column align-items-center justify-content-center vh-100">
-        <h2>Welcome to Proffasee!</h2>
+        <h2>Welcome to Prof-Fa-Cee!</h2>
         <p>
           Are you ready to explore the fascinating world where cutting-edge facial analysis meets
           ancient divination? 
@@ -174,14 +174,9 @@ function ResultPage() {
       <NavbarComponent />
 
       <div className="mt-3 text-center d-flex justify-content-around align-items-center">
-        <div className="result-image">
-          <h2>Result</h2>
+        <h2>Result</h2>
           {placeholderResp.url && <img src={placeholderResp.url} alt="Result" className="mb-3" />}
-        </div>
-
-        <div className="result-description">
           <p>{placeholderResp.description}</p>
-        </div>
       </div>
     </Container>
   );
