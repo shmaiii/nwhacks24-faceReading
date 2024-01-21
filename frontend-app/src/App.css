@@ -14,18 +14,19 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #fff;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-family: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: #ddd;
 }
 
 .App-link {
-  color: #61dafb;
+  color: #29abe2;
 }
 
 @keyframes App-logo-spin {
@@ -35,4 +36,10 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+body {
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  background: url('galaxy.jpeg') no-repeat center center fixed;
+  color: #ddd;
 }
