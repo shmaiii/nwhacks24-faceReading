@@ -4,6 +4,8 @@ from face_mesh.face_mesh_main import landmarks_detect
 from face_mesh.classify_features import get_facial_features
 from flask_cors import CORS
 from generate_prophecy import generate_prophecy
+import base64
+from PIL import Image
 
 app = Flask(__name__)
 CORS(app)
@@ -11,6 +13,29 @@ CORS(app)
 @app.route("/")
 def hello_world():
     return "<p>Hello, World!</p>"
+
+@app.route('/api/convertIMG', methods=['POST'])
+def convert_img():
+    try:
+        data = request.get_json()
+        b64_string = data.get('imageSrc', '')
+        image_code = base64.b64decode(b64_string.replace("data:image/webp;base64,", ""))
+        webp_filename = 'image.webp'
+        jpg_filename = 'face_mesh/image.jpg'
+        
+        with open(webp_filename, 'wb') as f:
+            f.write(image_code)
+
+        # Convert WEBP to JPG
+        im = Image.open(webp_filename).convert("RGB")
+        im.save(jpg_filename, "jpeg")
+
+        return {'message': 'Image successfully saved as WebP and converted to JPEG'}, 200
+
+    except Exception as e:
+        print(f'Error: {str(e)}')
+        return {'error': 'Failed to process the image'}, 500
+
 
 @app.route("/api/get_prophecy")
 def get_coordinates():

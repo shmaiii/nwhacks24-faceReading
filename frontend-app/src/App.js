@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, Navigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Webcam from 'react-webcam';
@@ -9,7 +9,7 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import splash from './splash.gif';
-import './App.css'
+import './App.css';
 
 function SplashScreen() {
   return (
@@ -19,24 +19,30 @@ function SplashScreen() {
   );
 }
 
+function NavbarComponent() {
+  return (
+    <Navbar className='custom-navbar' fixed='top'>
+      <Container>
+        <Navbar.Brand as={Link} to="/">
+          FaceFuture
+        </Navbar.Brand>
+        <Nav className="me-auto">
+          <Nav.Link as={Link} to="/">
+            Detect
+          </Nav.Link>
+          <Nav.Link as={Link} to="/result">
+            Result
+          </Nav.Link>
+        </Nav>
+      </Container>
+    </Navbar>
+  );
+}
+
 function LandingPage({ onStart }) {
   return (
     <Container>
-      <Navbar className='custom-navbar' fixed='top'>
-        <Container>
-          <Navbar.Brand as={Link} to="/">
-            FaceFuture
-          </Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link as={Link} to="/">
-              Detect
-            </Nav.Link>
-            <Nav.Link as={Link} to="/result">
-              Result
-            </Nav.Link>
-          </Nav>
-        </Container>
-      </Navbar>
+      <NavbarComponent />
 
       <div className="mt-3 text-center d-flex flex-column align-items-center justify-content-center vh-100">
         <h2>Welcome to FaceFuture!</h2>
@@ -58,51 +64,39 @@ function LandingPage({ onStart }) {
   );
 }
 
+
 function CapturePage({ onCapture }) {
-  const webcamRef = React.useRef(null);
-  const navigate = useNavigate();
+  const webcamRef = useRef(null);
 
   const captureHandler = async () => {
     const imageSrc = webcamRef.current.getScreenshot();
-
+  
     try {
-      const response = await fetch('YOUR_BACKEND_API_ENDPOINT', {
+      const response = await fetch('http://127.0.0.1:5000/api/convertIMG', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ image: imageSrc }),
+        body: JSON.stringify({ imageSrc }),
       });
 
       if (response.ok) {
-        const resultData = await response.json();
-        onCapture(resultData);
-        navigate('/result');
+        console.log('Image successfully processed on the backend');
+
+        if (onCapture) {
+          onCapture(imageSrc);
+        }
       } else {
         console.error('Failed to process the image on the backend');
       }
     } catch (error) {
       console.error('Error while communicating with the backend', error);
     }
-  };
+  };  
 
   return (
     <Container>
-      <Navbar className='custom-navbar' fixed='top'>
-        <Container>
-          <Navbar.Brand as={Link} to="/">
-            FaceFuture
-          </Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link as={Link} to="/">
-              Detect
-            </Nav.Link>
-            <Nav.Link as={Link} to="/result">
-              Result
-            </Nav.Link>
-          </Nav>
-        </Container>
-      </Navbar>
+      <NavbarComponent />
 
       <Form className="mt-3 text-center d-flex flex-column align-items-center justify-content-center vh-100">
         <Form.Group className="mb-3 text-center">
@@ -121,26 +115,12 @@ function CapturePage({ onCapture }) {
 function ResultPage({ resultData }) {
   return (
     <Container>
-      <Navbar className='custom-navbar' fixed='top'>
-        <Container>
-          <Navbar.Brand as={Link} to="/">
-            FaceFuture
-          </Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link as={Link} to="/">
-              Detect
-            </Nav.Link>
-            <Nav.Link as={Link} to="/result">
-              Result
-            </Nav.Link>
-          </Nav>
-        </Container>
-      </Navbar>
+      <NavbarComponent />
 
       <div className="mt-3 text-center">
         <h2>Result</h2>
         {resultData.image && <img src={resultData.image} alt="Result" className="mb-3" />}
-        <p>{resultData}</p>
+        <p>{resultData.description}</p>
       </div>
     </Container>
   );
