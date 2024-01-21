@@ -98,8 +98,10 @@ function CapturePage({ onCapture }) {
   
         if (response.ok) {
           console.log('Image successfully processed on the backend');
-  
-          placeholderResp = response;
+
+          const resppp = await response.json()
+          console.log(resppp)
+          placeholderResp = resppp;
           if (onCapture) {
             onCapture(imageSrc);
   
