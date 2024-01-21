@@ -7,18 +7,55 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+const db = require('./db.json');
+
 //APIS
-
-//example endpoint
-app.get("/app/helloworld", (req, res) => {
-    res.send("Hello World");
-})
-
 app.get("/app/get_prophecy", (req, res) => {
-    // this is a stub api to get prophecy
-    // TODO: implement
-    res.send('You are pretty af');
-})
+    // req = {
+    //     "face_shape": "oval",
+    //     "eyebrows": ["high", "thin"],
+    //     "forehead": "low_and_wide",
+    // }
+    const attributes = Object.keys(req);
+
+    if (attributes.length === 0) {
+        res.status(400).send("Please provide at least one attribute in the request.");
+        return;
+    }
+
+    const descriptions = [];
+
+    for (const attribute of attributes) {
+        const value = req[attribute];
+        const attributeObject = findAttributeDescription(attribute, value, descriptions);
+    }
+
+    const concatenatedString = descriptions.join(" ");
+    res.send(concatenatedString);
+});
+
+function findAttributeDescription(attribute, value, descriptions) {
+    if (db[attribute]) {
+        const attributeArray = db[attribute];
+
+        if (Array.isArray(attributeArray) && Array.isArray(value)) {
+            // Handle attributes with more than one key (eg. eyebrows)
+            for (const item of value) {
+                const itemDescription = attributeArray.find(obj => obj[item]);
+                const description = itemDescription[item];
+                descriptions.push(description);
+            }
+            return descriptions;
+        } else {
+            // Handle attributes that take in a single key (eg. face_shape)
+            const itemDescription = attributeArray.find(obj => obj[value]);
+            const description = itemDescription[value];
+            return descriptions.push(description);
+        }
+    }
+
+    return null;
+}
 
 const PORT = process.env.PORT || 30001;
 app.listen(PORT,() => {

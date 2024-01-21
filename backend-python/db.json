@@ -1,0 +1,37 @@
+{
+    "face_shape": [
+        {"round": "A round face reveals that you tend to be soft-spoken, a people person, kind, nurturing, and giving. You find joy in helping others and can be described as easy-going, and generous. However, be careful as this could lead to often forgetting your own needs."},
+        {"oblong": "This is categorized as a long, thin face, and are known to be more practical, methodical and a tad bit overworked. They are weighed along with narcissism and may have problematic relationships."},
+        {"triangle": "You have a triangular face shape. Those with this face shape are considered to be creative and thought to have a fiery temperament."},
+        {"square": "You have a square face shape. Those with this face shape are thought to have an intelligent, analytical and decisive mind. It is also associated with an aggressive and dominating nature."},
+        {"rectangle": "You have a rectangular face shape. Those with this face shape signal some variety. They tend to dominate but with less force, often they get their way in politics, business, sports, being always balanced, sometimes ambitious, sometimes melancholic."},
+        {"oval": "You have an oval face shape. Those with this face shape signify that they are balanced, sweet, and charming. Temperamentally, however, they are often weaker as well as weaker in physical strength."}
+    ],
+    "forehead" : [
+        {"low_and_wide": "A low and wide forehead shows an intuitive nature, endowed with natural skill and imagination. You are very spontaneous"},
+        {"high_and_wide": "A broad forehead often aligns with a sharp intellect and profound analytical thinking. You exhibit a natural curiosity and an insatiable thirst for knowledge."},
+        {"square": "A square forehead shows honesty and sincerity. "},
+        {"narrow": "A narrow forehead indicates you possess an abundant wellspring of creativity and imagination. You possess a disinct perspective on the world and often gravitate toward artistic pursuits."}
+    ],
+    "eyebrows": [
+        {"straight": "Those with straight eyebrows are direct and factual. They want the technical details and appreciate logic."},
+        {"arched": "Those with arched eyebrows have good leadership qualities. They like to be right and usually are."},
+        {"high": "Those with high eyebrows are discerning, selective, and discriminating. They need time to observe and work out ideas before acting. They detest being put on the spot about something new before they have had time to reflect on it and understand it."},
+        {"low": "Those with low eyebrows are expressive, quick to take action and process information quickly. They have a tendency to interrupt others when they seem too slow to speak because often they can anticipate what they are going to say before they have finished saying it. They are initially optimistic but may become antagonistic if critisized."},
+        {"bushy": "Those with fuller brows are more mentally actie, full of thoughts and ideas. They are powerful intellects and non-stop thinkers."},
+        {"thin": "Those with thinner brows tend to focus more on one thing at a time. They sometimes feel overly self-conscious."}
+    ], 
+    "eyes": [
+        {"wide_set": "Those with wider-set eyes are usually more flexible and impulsive. They find happiness in the unknown and exploration of life."},
+        {"close-set": "Those with close-set eyes are typically traditionalists and are more content with routine. They do not desire change as much as others, and have extreme focus and discipline."}
+    ],
+    "cheeks": [
+        {"high_cheekbones": "Raised cheekbones indicate you have a generous and compassionate heart, ready to share tears with anyone's pain. You are also easily impressionable."},
+        {"sunken": "Sunken cheeks indicate you are more of the irritable type, melancholic,and most often sick."},
+        {"full": "Rounder/ fuller cheeks indicate you exude spiritual innocence, some softness, and lack for action."}
+    ],
+    "lips": [
+        {"thick": "Fuller lips suggest you are affectionate, caring, and nurturing. You are a passionate and optimistic individual who prioritizes the need of others over your own, sometimes to a fault. You may exude confidence and self-assuredness and can be unwavering in your opinions."},
+        {"thin": "Thinner lips are associated with introversion and self-sufficiency. You tend to be more cautious, independent and reserved."}
+    ]
+}
