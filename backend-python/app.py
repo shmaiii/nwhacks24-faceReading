@@ -1,7 +1,7 @@
 from flask import Flask, request
 import requests
 from face_mesh.face_mesh_main import landmarks_detect
-from face_mesh.get_facial_features import get_facial_features
+from face_mesh.classify_features import get_facial_features
 
 app = Flask(__name__)
 
@@ -21,6 +21,7 @@ def get_coordinates():
     coordinates = landmarks_detect()
     #get the final result 
     facial_features = get_facial_features(coordinates)
+    print(facial_features)
     #get the prophecy texts
     final_prophecy = ''
 
