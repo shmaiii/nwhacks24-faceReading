@@ -10,7 +10,7 @@ from mediapipe import solutions
 import cv2
 import os
 
-path = os.path.join(os.path.dirname(__file__), 'mai.jpg')
+path = os.path.join(os.path.dirname(__file__), 'image.jpg')
 
 model_path = os.path.join(os.path.dirname(__file__), 'face_landmarker.task')
 #path = "./mai.jpg"
@@ -72,11 +72,11 @@ def landmarks_detect():
       res = detection_result.face_landmarks
       print(res[0][1].x)
 
-      annotated_image = draw_landmarks_on_image(mp_image.numpy_view(), detection_result)
-      cv2.imwrite(os.path.join(os.path.dirname(__file__), 'annotated_image.jpg'), cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
+      #annotated_image = draw_landmarks_on_image(mp_image.numpy_view(), detection_result)
+      #cv2.imwrite(os.path.join(os.path.dirname(__file__), 'annotated_image.jpg'), cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
 
   return res[0]
 
-# if __name__ == "__main__":
-#     landmarks_detect()
+if __name__ == "__main__":
+    landmarks_detect()
 
