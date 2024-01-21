@@ -113,7 +113,7 @@ def classify_eye_set(eye_distance, eyeball_w):
         return "close_set"
 
 def classify_eyebrows(points):
-    res = ["High and Arched Eyebrows", "High Eyebrows", "Arched Eyebrows", "Low and Straight Eyebrows", "Low Eyebrows", "Straight Eyebrows", "Bushy Eyebrows", "Thin Eyebrows"]
+    res = ["high", "arched", "low", "straight", "bushy", "thin"]
     eyes_height = calculate_distance(points, 159, 145)
     #eyebrwo_height means height to eyebrow starting from eyes
     eyebrow_height = calculate_distance(points, 52, 27)
@@ -128,8 +128,6 @@ def classify_eyebrows(points):
         return "thin"
     
     if eyebrows_slope >= 0.35 :
-        if eyes_to_eyebrows_ratio > 1.2 or calculate_distance(points, 65, 45) / (eyebrow_height + eyes_height) > 1.5:
-            return "Hight and Arched Eyebrows"
         return "arched"
     if eyebrows_slope <= 0.15:
         if eyes_to_eyebrows_ratio < 0.8 or calculate_distance(points, 65, 45) / (eyebrow_height + eyes_height) < 0.5 :
