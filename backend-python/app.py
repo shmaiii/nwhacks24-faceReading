@@ -21,7 +21,7 @@ def convert_img():
         data = request.get_json()
         b64_string = data.get('imageSrc', '')
         image_code = base64.b64decode(b64_string.replace("data:image/webp;base64,", ""))
-        webp_filename = 'image.webp'
+        webp_filename = 'face_mesh/image.webp'
         jpg_filename = 'face_mesh/image.jpg'
         
         with open(webp_filename, 'wb') as f:
