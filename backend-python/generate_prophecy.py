@@ -17,8 +17,8 @@ def generate_prophecy(input):
         value = input[attribute]
         attribute_descriptions = find_attribute_description(attribute, value, descriptions)
 
-    concatenated_string = " ".join(descriptions)
-    return f'"{concatenated_string}"'
+    concatenated_strings = '\n\n'.join([f'"{desc}"' for desc in descriptions])
+    return f'{concatenated_strings}'
 
 def find_attribute_description(attribute, value, descriptions):
     if attribute in db:
