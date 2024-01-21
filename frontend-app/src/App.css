@@ -43,3 +43,11 @@ body {
   background: url('galaxy.jpeg') no-repeat center center fixed;
   color: #ddd;
 }
+
+.custom-navbar {
+  color: #fff;
+}
+
+.custom-navbar a {
+  color: #fff;
+}

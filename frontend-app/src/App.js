@@ -22,10 +22,10 @@ function SplashScreen() {
 function LandingPage({ onStart }) {
   return (
     <Container>
-      <Navbar>
+      <Navbar className='custom-navbar' fixed='top'>
         <Container>
           <Navbar.Brand as={Link} to="/">
-            Face Reading
+            FaceFuture
           </Navbar.Brand>
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/">
@@ -38,7 +38,7 @@ function LandingPage({ onStart }) {
         </Container>
       </Navbar>
 
-      <div className="mt-3 text-center">
+      <div className="mt-3 text-center d-flex flex-column align-items-center justify-content-center vh-100">
         <h2>Welcome to FaceFuture!</h2>
         <p>
           Are you ready to explore the fascinating world where cutting-edge facial analysis meets
@@ -88,10 +88,10 @@ function CapturePage({ onCapture }) {
 
   return (
     <Container>
-      <Navbar>
+      <Navbar className='custom-navbar' fixed='top'>
         <Container>
           <Navbar.Brand as={Link} to="/">
-            Face Reading
+            FaceFuture
           </Navbar.Brand>
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/">
@@ -104,7 +104,7 @@ function CapturePage({ onCapture }) {
         </Container>
       </Navbar>
 
-      <Form className="mt-3 text-center">
+      <Form className="mt-3 text-center d-flex flex-column align-items-center justify-content-center vh-100">
         <Form.Group className="mb-3 text-center">
           <Webcam ref={webcamRef} />
         </Form.Group>
@@ -121,10 +121,10 @@ function CapturePage({ onCapture }) {
 function ResultPage({ resultData }) {
   return (
     <Container>
-      <Navbar>
+      <Navbar className='custom-navbar' fixed='top'>
         <Container>
           <Navbar.Brand as={Link} to="/">
-            Face Reading
+            FaceFuture
           </Navbar.Brand>
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/">
