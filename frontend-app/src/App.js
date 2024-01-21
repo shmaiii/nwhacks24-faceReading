@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, Navigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Webcam from 'react-webcam';
@@ -9,7 +9,8 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import splash from './splash.gif';
-import './App.css'
+import './App.css';
+import * as fs from 'fs';
 
 function SplashScreen() {
   return (
@@ -19,24 +20,30 @@ function SplashScreen() {
   );
 }
 
+function NavbarComponent() {
+  return (
+    <Navbar className='custom-navbar' fixed='top'>
+      <Container>
+        <Navbar.Brand as={Link} to="/">
+          FaceFuture
+        </Navbar.Brand>
+        <Nav className="me-auto">
+          <Nav.Link as={Link} to="/">
+            Detect
+          </Nav.Link>
+          <Nav.Link as={Link} to="/result">
+            Result
+          </Nav.Link>
+        </Nav>
+      </Container>
+    </Navbar>
+  );
+}
+
 function LandingPage({ onStart }) {
   return (
     <Container>
-      <Navbar className='custom-navbar' fixed='top'>
-        <Container>
-          <Navbar.Brand as={Link} to="/">
-            FaceFuture
-          </Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link as={Link} to="/">
-              Detect
-            </Nav.Link>
-            <Nav.Link as={Link} to="/result">
-              Result
-            </Nav.Link>
-          </Nav>
-        </Container>
-      </Navbar>
+      <NavbarComponent />
 
       <div className="mt-3 text-center d-flex flex-column align-items-center justify-content-center vh-100">
         <h2>Welcome to FaceFuture!</h2>
@@ -58,51 +65,61 @@ function LandingPage({ onStart }) {
   );
 }
 
+
 function CapturePage({ onCapture }) {
-  const webcamRef = React.useRef(null);
+  const webcamRef = useRef(null);
   const navigate = useNavigate();
 
   const captureHandler = async () => {
     const imageSrc = webcamRef.current.getScreenshot();
-
+    var base64Data = imageSrc.replace(/^data:image\/webp;base64,/, "");
+    fs.writeFileSync("./out.jpg", base64Data, 'base64', function(err) {
+      console.log(err);
+    });
+    fs.readFileSync(base64Data, {encoding: 'base64'});
+  
     try {
-      const response = await fetch('YOUR_BACKEND_API_ENDPOINT', {
+      const response = await fetch('https://api.imgur.com/3/image', {
         method: 'POST',
         headers: {
+          'Authorization': 'Client-ID ee52a5df0524c14',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ image: imageSrc }),
+        body: JSON.stringify({
+          'image': base64Data,
+        }),
       });
 
       if (response.ok) {
-        const resultData = await response.json();
-        onCapture(resultData);
-        navigate('/result');
+        const imgurResultData = await response.json();
+        const imageUrl = imgurResultData.link;
+        console.log(imageUrl);
+  
+        const backendResponse = await fetch(`http://127.0.0.1:5000/api/get_prophecy?img_url=${imageUrl}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+  
+        if (backendResponse.ok) {
+          const resultDataFromBackend = await backendResponse.json();
+          onCapture(resultDataFromBackend);
+          navigate('/result');
+        } else {
+          console.error('Failed to get result data from the backend');
+        }
       } else {
         console.error('Failed to process the image on the backend');
       }
     } catch (error) {
       console.error('Error while communicating with the backend', error);
     }
-  };
+  };  
 
   return (
     <Container>
-      <Navbar className='custom-navbar' fixed='top'>
-        <Container>
-          <Navbar.Brand as={Link} to="/">
-            FaceFuture
-          </Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link as={Link} to="/">
-              Detect
-            </Nav.Link>
-            <Nav.Link as={Link} to="/result">
-              Result
-            </Nav.Link>
-          </Nav>
-        </Container>
-      </Navbar>
+      <NavbarComponent />
 
       <Form className="mt-3 text-center d-flex flex-column align-items-center justify-content-center vh-100">
         <Form.Group className="mb-3 text-center">
@@ -121,26 +138,12 @@ function CapturePage({ onCapture }) {
 function ResultPage({ resultData }) {
   return (
     <Container>
-      <Navbar className='custom-navbar' fixed='top'>
-        <Container>
-          <Navbar.Brand as={Link} to="/">
-            FaceFuture
-          </Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link as={Link} to="/">
-              Detect
-            </Nav.Link>
-            <Nav.Link as={Link} to="/result">
-              Result
-            </Nav.Link>
-          </Nav>
-        </Container>
-      </Navbar>
+      <NavbarComponent />
 
       <div className="mt-3 text-center">
         <h2>Result</h2>
         {resultData.image && <img src={resultData.image} alt="Result" className="mb-3" />}
-        <p>{resultData}</p>
+        <p>{resultData.description}</p>
       </div>
     </Container>
   );
