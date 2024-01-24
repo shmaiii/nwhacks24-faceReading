@@ -1,5 +1,7 @@
 ### Prof-Fa-Cee
 
+Devpost Link: https://devpost.com/software/prof-fa-cee
+
 ## Inspiration
 We get healings and guidance from our spritual beliefs. But it costs at least 10$ to see a reader! With prof-fa-cee, you can get future tellings (for free) and save yourself some money for boba!! The app is based on physiognomy to read facial features for characteristics and dispositions!!
 
