@@ -1,11 +1,11 @@
 import json
+from openai import OpenAI
 
 with open("db.json", "r") as file:
     db = json.load(file)
 
-# @app.route("/app/get_prophecy", methods=["GET"])
-# def get_prophecy():
-#     return
+# set up client key
+openai_client = OpenAI(api_key='OPENAI_API_KEY')
 
 def generate_prophecy(input):
     print(input)
@@ -18,7 +18,18 @@ def generate_prophecy(input):
         attribute_descriptions = find_attribute_description(attribute, value, descriptions)
     
     concatenated_strings = ''.join(descriptions)
-    return concatenated_strings
+    
+    user_message = f"Following the facial features and correlated attributes determined for this user based on physiognomy, similar to tarot reading and palm reading, draw predictions about their future health, wealth, relationships love life, and career: {concatenated_strings}"
+ 
+    response = openai_client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": user_message},
+        ]
+    )
+    print(response.choices[0].message.content)
+ 
+    return response.choices[0].message.content
 
 def find_attribute_description(attribute, value, descriptions):
     if attribute in db:
